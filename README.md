@@ -7,9 +7,9 @@ netbooting.
 Usage
 -----
 
-  git clone https://github.com/espebra/netboot-skel
-  cd netboot-skel
-  vagrant up
+    git clone https://github.com/espebra/netboot-skel
+    cd netboot-skel
+    vagrant up
 
 Provides
 --------

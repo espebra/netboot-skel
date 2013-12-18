@@ -1,0 +1,12 @@
+#!/bin/bash
+
+ks="/srv/image/ks.conf"
+label="compute"
+tmp="/tmp"
+cache="/cache"
+log="/var/log/livecd-creator.log"
+
+cd $(dirname ${ks})
+
+livecd-creator --config=${ks} --fslabel=${label} --tmpdir=${tmp} --cache=${cache} --logfile=${log} && livecd-iso-to-pxeboot ${label}.iso 
+

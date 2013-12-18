@@ -47,13 +47,6 @@ file {
     "/srv/tftp":
         ensure  => "link",
         target  => "/var/lib/tftpboot";
-    "/srv/image/tftpboot":
-        ensure  => "directory",
-        require => File["/srv/image"];
-    "/srv/www/image":
-        ensure  => "link",
-        require => File["/srv/image/tftpboot"],
-        target  => "/srv/image/tftpboot";
 }
 
 # Files

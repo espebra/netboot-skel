@@ -5,8 +5,12 @@ label="compute"
 tmp="/tmp"
 cache="/cache"
 log="/var/log/livecd-creator.log"
+release=$(date +%Y-%m-%d-%H-%M)
+current="/srv/www/image"
 
-cd $(dirname ${ks})
+dir=$(dirname ${ks})/${release}
+mkdir -p $dir
+cd $dir
 
-livecd-creator --config=${ks} --fslabel=${label} --tmpdir=${tmp} --cache=${cache} --logfile=${log} && livecd-iso-to-pxeboot ${label}.iso 
+livecd-creator --config=${ks} --fslabel=${label}-${release} --tmpdir=${tmp} --cache=${cache} --logfile=${log} && livecd-iso-to-pxeboot ${label}.iso && ln -sf ${dir}/tftpboot ${current}
 

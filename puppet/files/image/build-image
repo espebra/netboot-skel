@@ -12,5 +12,5 @@ dir=$(dirname ${ks})/${release}
 mkdir -p $dir
 cd $dir
 
-livecd-creator --config=${ks} --fslabel=${label}-${release} --tmpdir=${tmp} --cache=${cache} --logfile=${log} && livecd-iso-to-pxeboot ${label}.iso && ln -sf ${dir}/tftpboot ${current}
+livecd-creator --config=${ks} --fslabel=${label} --tmpdir=${tmp} --cache=${cache} --logfile=${log} && livecd-iso-to-pxeboot ${label}.iso && ln -sf ${dir}/tftpboot ${current}
 

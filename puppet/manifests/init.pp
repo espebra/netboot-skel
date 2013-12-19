@@ -83,7 +83,7 @@ exec {
         user        => "root",
         refreshonly => "true",
         timeout     => 0,
-        require     => File["/usr/local/sbin/build-image"];
+        require     => [File["/usr/local/sbin/build-image"],File["/srv/www"]];
     "import-gpg-key":
         command     => "/bin/rpm --import https://fedoraproject.org/static/0608B895.txt",
         user        => "root";

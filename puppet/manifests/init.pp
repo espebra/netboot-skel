@@ -1,5 +1,6 @@
 # Packages
-$packages = [ 'dhcp', 'xinetd', 'tftp-server', 'nginx', 'livecd-tools' ]
+$packages = [ 'epel-release', 'dhcp', 'xinetd', 'tftp-server', 'nginx', 
+              'livecd-tools' ]
 package {
     $packages: 
         require => Yumrepo["epel"],

@@ -9,16 +9,16 @@ package {
 # Repositories
 yumrepo {
     "epel":
-        name     => "epel",
-        baseurl  => "http://dl.fedoraproject.org/pub/epel/6/x86_64/",
-        require  => Exec["import-gpg-key"],
-        enabled  => 1,
-        gpgcheck => 1;
+        name      => "epel",
+        baseurl   => "http://dl.fedoraproject.org/pub/epel/6/x86_64/",
+        enabled   => 1,
+        gpgcheck  => 1,
+        gpgkey    => "https://fedoraproject.org/static/0608B895.txt";
 }
 
 # Services
 Service {
-    require => Package[$packages],
+    require    => Package[$packages],
     enable     => true,
     ensure     => true,
     hasrestart => true,
@@ -28,10 +28,13 @@ service {
     "xinetd": ;
     "dhcpd": ;
     "nginx": ;
+    "iptables": ;
 }
 
 File {
     require => Package[$packages],
+    owner   => "root",
+    group   => "root",
 }
 
 # Directory structure
@@ -51,6 +54,10 @@ file {
 
 # Files
 file {
+    "/etc/sysconfig/iptables":
+        ensure  => "present",
+        source  => "/vagrant/puppet/files/iptables/iptables",
+        notify  => Service["iptables"];
     "/etc/dhcp/dhcpd.conf":
         ensure  => "present",
         source  => "/vagrant/puppet/files/dhcp/dhcpd.conf",
@@ -83,9 +90,6 @@ exec {
         user        => "root",
         refreshonly => "true",
         timeout     => 0,
-        require     => [File["/usr/local/sbin/build-image"],File["/srv/www"]];
-    "import-gpg-key":
-        command     => "/bin/rpm --import https://fedoraproject.org/static/0608B895.txt",
-        user        => "root";
+        require     => File["/usr/local/sbin/build-image"];
 }
 

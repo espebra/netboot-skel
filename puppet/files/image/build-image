@@ -9,6 +9,7 @@ release=$(date +%Y-%m-%d-%H-%M)
 current="/srv/www/image"
 
 dir=$(dirname ${ks})/${release}
+mkdir -p $(dirname $current)
 mkdir -p $dir
 cd $dir
 

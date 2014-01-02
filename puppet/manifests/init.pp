@@ -82,6 +82,9 @@ file {
     "/srv/www/ipxe.conf":
         ensure  => "present",
         source  => "/vagrant/puppet/files/ipxe/ipxe.conf";
+    "/etc/motd":
+        mode    => 444,
+        content => "\nThe latest version of the netboot image should be available in\n/srv/www/image/\n\n";
 }
 
 # Commands

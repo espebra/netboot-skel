@@ -14,7 +14,7 @@ Modify the netboot kickstart configuration as explained in the **Configuration**
 
     vagrant up
 
-The netboot image will become available as *initrd0.img* and *vmlinuz*:
+The netboot image will become available as *initrd0.img* and *vmlinuz0*:
 
 * at http://192.168.50.50/image/
 * in the local filesystem at /srv/image/[release]/tftpboot/

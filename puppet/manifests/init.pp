@@ -10,7 +10,7 @@ package {
 # Repositories
 yumrepo {
     "epel":
-        name      => "epel",
+        descr     => "epel",
         baseurl   => "http://dl.fedoraproject.org/pub/epel/6/x86_64/",
         enabled   => 1,
         gpgcheck  => 1,

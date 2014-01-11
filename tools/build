@@ -25,6 +25,7 @@ do
     if [ -e "${destdir}/${label}/md5" ]
     then
         if [ -e "${md5sum_cache_file}" ]
+        then
             md5sum_cache=$(cat ${md5sum_cache_file})
 
             if [ "${md5sum_cache}" != "${md5sum}" ]

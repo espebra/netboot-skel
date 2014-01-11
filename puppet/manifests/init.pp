@@ -48,5 +48,8 @@ file {
     "/etc/motd":
         mode    => 444,
         content => "\nThe latest version of the netboot image should be available in\n/vagrant/images/\n\n";
+    "/etc/profile.d/path.sh":
+        mode    => 555,
+        content => 'export PATH="$PATH:/vagrant/tools"';
 }
 

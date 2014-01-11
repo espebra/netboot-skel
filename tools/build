@@ -18,17 +18,25 @@ do
     echo $label
     md5sum=$(md5sum "${srcdir}/${ks}" | awk '{print $1}')
     md5sum_cache_file="${cachedir}/${label}.md5"
+
     build=0
+    md5sum_cache="foo"
 
     if [ -e "${destdir}/${label}/md5" ]
     then
-        md5sum_cache=$(cat ${md5sum_cache_file})
-        if [ "${md5sum_cache}" != "${md5sum}" ]
-        then
-            echo " > The configuration has been updated. Will rebuild."
-            build=1
+        if [ -e "${md5sum_cache_file}" ]
+            md5sum_cache=$(cat ${md5sum_cache_file})
+
+            if [ "${md5sum_cache}" != "${md5sum}" ]
+            then
+                echo " > The configuration has been updated. Will rebuild."
+                build=1
+            else
+                echo " > No changes found. Will not rebuild."
+            fi
         else
-            echo " > No changes found. Will not rebuild."
+            echo " > Cached checksum does not exist. Will build."
+            build=1
         fi
     else
         echo " > Checksum does not exist. Will build."

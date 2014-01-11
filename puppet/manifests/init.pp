@@ -1,6 +1,5 @@
 # Packages
-$packages = [ 'epel-release', 'dhcp', 'xinetd', 'tftp-server', 'nginx', 
-              'livecd-tools' ]
+$packages = [ 'epel-release', 'nginx', 'livecd-tools' ]
 package {
     $packages: 
         require => Yumrepo["epel"],
@@ -26,8 +25,6 @@ Service {
 }
 
 service {
-    "xinetd": ;
-    "dhcpd": ;
     "nginx": ;
     "iptables": ;
 }
@@ -38,62 +35,18 @@ File {
     group   => "root",
 }
 
-# Directory structure
-file {
-    "/srv":
-        ensure  => "directory";
-    "/srv/www":
-        ensure  => "directory",
-        require => File["/srv"];
-    "/srv/image":
-        ensure  => "directory",
-        require => File["/srv"];
-    "/srv/tftp":
-        ensure  => "link",
-        target  => "/var/lib/tftpboot";
-}
-
 # Files
 file {
     "/etc/sysconfig/iptables":
         ensure  => "present",
         source  => "/vagrant/puppet/files/iptables/iptables",
         notify  => Service["iptables"];
-    "/etc/dhcp/dhcpd.conf":
-        ensure  => "present",
-        source  => "/vagrant/puppet/files/dhcp/dhcpd.conf",
-        notify  => Service["dhcpd"];
     "/etc/nginx/conf.d/default.conf":
         ensure  => "present",
         source  => "/vagrant/puppet/files/nginx/default.conf",
         notify  => Service["nginx"];
-    "/usr/local/sbin/build-image":
-        ensure  => "present",
-        mode    => 555,
-        source  => "/vagrant/puppet/files/image/build-image";
-    "/srv/image/ks.conf":
-        ensure  => "present",
-        source  => "/vagrant/puppet/files/image/ks.conf",
-        notify  => Exec["build-image"];
-    "/srv/tftp/undionly.kpxe":
-        ensure  => "present",
-        source  => "/vagrant/puppet/files/ipxe/undionly.kpxe",
-        require => File["/srv/tftp"];
-    "/srv/www/ipxe.conf":
-        ensure  => "present",
-        source  => "/vagrant/puppet/files/ipxe/ipxe.conf";
     "/etc/motd":
         mode    => 444,
-        content => "\nThe latest version of the netboot image should be available in\n/srv/www/image/\n\n";
-}
-
-# Commands
-exec {
-    "build-image":
-        command     => "/usr/local/sbin/build-image",
-        user        => "root",
-        refreshonly => "true",
-        timeout     => 0,
-        require     => File["/usr/local/sbin/build-image"];
+        content => "\nThe latest version of the netboot image should be available in\n/vagrant/images/\n\n";
 }
 

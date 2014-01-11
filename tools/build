@@ -1,0 +1,82 @@
+#!/bin/bash
+
+srcdir="/vagrant/ks/"
+destdir="/vagrant/images/"
+workdir="/tmp/work"
+tmpdir="/tmp"
+cachedir="/var/tmp/cache"
+log="/var/log/livecd-creator.log"
+release=$(date +%Y-%m-%d-%H-%M)
+
+mkdir -p "${workdir}"
+mkdir -p "${cachedir}"
+
+for ks in $(ls ${srcdir})
+do
+    label=$(basename ${ks} .conf)
+    iso="${workdir}/${label}.iso"
+    echo $label
+    md5sum=$(md5sum "${srcdir}/${ks}" | awk '{print $1}')
+    md5sum_cache_file="${cachedir}/${label}.md5"
+    build=0
+
+    if [ -e "${destdir}/${label}/md5" ]
+    then
+        md5sum_cache=$(cat ${md5sum_cache_file})
+        if [ "${md5sum_cache}" != "${md5sum}" ]
+        then
+            echo " > The configuration has been updated. Will rebuild."
+            build=1
+        else
+            echo " > No changes found. Will not rebuild."
+        fi
+    else
+        echo " > Checksum does not exist. Will build."
+        build=1
+    fi
+
+    if [ $build -eq 1 ]
+    then
+        mkdir -p "${destdir}/${label}"
+        cd "${workdir}"
+
+        livecd-creator --config="${srcdir}/${ks}" --fslabel=${label} --tmpdir=${tmpdir} --cache=${cachedir}
+
+        if [ $? -eq 0 ]
+        then
+            if [ -e "${iso}" ]
+            then
+                if [ -e "${workdir}/tftpboot" ]
+                then
+                    rm -rf "${workdir}/tftpboot"
+                fi
+                livecd-iso-to-pxeboot ${iso}
+                if [ $? -eq 0 ]
+                then
+                    vmlinuz="${workdir}/tftpboot/vmlinuz0"
+                    initrd="${workdir}/tftpboot/initrd0.img"
+                    if [ -e ${vmlinuz} ]&&[ -e ${initrd} ]
+                    then
+                        mv -f ${vmlinuz} "${destdir}/${label}"
+                        mv -f ${initrd} "${destdir}/${label}"
+                        echo $md5sum > $md5sum_cache_file
+                    fi
+                fi
+            else
+                echo " > Unable to create ${iso}"
+            fi
+        fi
+    fi
+    if [ -e "${iso}" ]
+    then
+        rm -f ${iso}
+    fi
+done
+
+#dir=$(dirname ${ks})/${release}
+#mkdir -p $(dirname $current)
+#mkdir -p $dir
+#cd $dir
+#
+
+#livecd-creator --config=${ks} --fslabel=${label} --tmpdir=${tmp} --cache=${cache} --logfile=${log} && livecd-iso-to-pxeboot ${label}.iso && ln -sf ${dir}/tftpboot ${current}

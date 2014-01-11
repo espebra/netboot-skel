@@ -26,6 +26,9 @@ The configuration for the netboot image may be modified in *ks/default.conf*, or
 
 Sample ipxe configuration:
 
+    #!ipxe
     initrd http://example.com/initrd0.img
     kernel http://example.com/vmlinuz0 rootflags=loop initrd=initrd0.img initrd=/initrd0.img root=/default.iso rootfstype=auto rw liveimg toram size=4096
+    boot
+
 

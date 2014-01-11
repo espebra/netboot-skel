@@ -24,3 +24,8 @@ Configuration
 
 The configuration for the netboot image may be modified in *ks/default.conf*, or you may add your own (remember to suffix the filename with .conf). The configuration file(s) will be built at the next boot or if the script */vagrant/tools/build* script is executed manually.
 
+Sample ipxe configuration:
+
+    initrd http://example.com/initrd0.img
+    kernel http://example.com/vmlinuz0 rootflags=loop initrd=initrd0.img initrd=/initrd0.img root=/default.iso rootfstype=auto rw liveimg toram size=4096
+

@@ -9,7 +9,7 @@ Usage
     git clone https://github.com/espebra/netboot-skel
     cd netboot-skel
 
-Put your kickstarts file in the *ks* directory, or modify the example kickstart file *default.conf*. The kickstart files must have the suffix *.conf*.
+Put your kickstart files in the *ks* directory, or modify the example kickstart file *default.conf*. The kickstart files must have the suffix *.conf*.
 
 Create the virtual machine using
 

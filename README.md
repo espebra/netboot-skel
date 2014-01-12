@@ -10,21 +10,33 @@ Usage
     git clone https://github.com/espebra/netboot-skel
     cd netboot-skel
 
-Modify the default netboot kickstart configuration or add your own as explained in the **Configuration** section below.
+Put your kickstarts file in the *ks* directory, or modify the example kickstart file *default.conf*. The kickstart files must have the suffix *.conf*.
+
+Create the virtual machine using
 
     vagrant up
 
-The netboot image will become available as *initrd0.img* and *vmlinuz0*:
+When the virtual machine has been built, log into it and execute the build script:
+
+    vagrant ssh
+    sudo -i build
+
+The netboot images will become available as *initrd0.img* and *vmlinuz0* in separate directories:
 
 * at http://192.168.50.50/
 * in the local filesystem at /vagrant/images/
 
-Configuration
--------------
+Post script
+-----------
 
-The configuration for the netboot image may be modified in *ks/default.conf*, or you may add your own (remember to suffix the filename with .conf). The configuration file(s) will be built at the next boot or if the script */vagrant/tools/build* script is executed manually.
+The build process will look for files with the suffix *.post* in the *ks* directory. If there is a kickstart configuration called *example.conf* and a post script file called *example.post*, the post script will be executed with the target directory as the argument, i.e.:
 
-Sample ipxe configuration:
+    /vagrant/ks/example.post /vagrant/images/example/
+
+These post scripts can distribute the builds to an external web server, manage versioning, etc.
+
+Sample ipxe configuration
+-------------------------
 
     #!ipxe
     initrd http://example.com/initrd0.img

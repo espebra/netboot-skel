@@ -6,7 +6,7 @@ This configuration makes it easy to build EL6 ramdisk images.
 Requirements
 ------------
 
-* A functional vagrant setup.
+* A functional vagrant setup. See http://www.vagrantup.com/ for more information.
 
 Usage
 -----

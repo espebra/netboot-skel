@@ -1,8 +1,7 @@
 Netboot skel
 ============
 
-This configuration makes it easy to deploy infrastructure required for 
-netbooting.
+This configuration makes it easy to build EL6 ramdisk images.
 
 Usage
 -----

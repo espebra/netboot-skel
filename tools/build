@@ -11,36 +11,30 @@ release=$(date +%Y-%m-%d-%H-%M)
 mkdir -p "${workdir}"
 mkdir -p "${cachedir}"
 
-for ks in $(ls ${srcdir})
+for ks in $(find "${srcdir}" -iname "*.conf")
 do
     label=$(basename ${ks} .conf)
     iso="${workdir}/${label}.iso"
     echo $label
-    md5sum=$(md5sum "${srcdir}/${ks}" | awk '{print $1}')
+    md5sum=$(md5sum "${ks}" | awk '{print $1}')
     md5sum_cache_file="${cachedir}/${label}.md5"
 
     build=0
     md5sum_cache="foo"
 
-    if [ -e "${destdir}/${label}/md5" ]
+    if [ -e "${md5sum_cache_file}" ]
     then
-        if [ -e "${md5sum_cache_file}" ]
-        then
-            md5sum_cache=$(cat ${md5sum_cache_file})
+        md5sum_cache=$(cat ${md5sum_cache_file})
 
-            if [ "${md5sum_cache}" != "${md5sum}" ]
-            then
-                echo " > The configuration has been updated. Will rebuild."
-                build=1
-            else
-                echo " > No changes found. Will not rebuild."
-            fi
-        else
-            echo " > Cached checksum does not exist. Will build."
+        if [ "${md5sum_cache}" != "${md5sum}" ]
+        then
+            echo " > The configuration has been updated. Will rebuild."
             build=1
+        else
+            echo " > No changes found. Will not rebuild."
         fi
     else
-        echo " > Checksum does not exist. Will build."
+        echo " > Cached checksum does not exist. Will build."
         build=1
     fi
 
@@ -49,7 +43,7 @@ do
         mkdir -p "${destdir}/${label}"
         cd "${workdir}"
 
-        livecd-creator --config="${srcdir}/${ks}" --fslabel=${label} --tmpdir=${tmpdir} --cache=${cachedir}
+        livecd-creator --config="${ks}" --fslabel=${label} --tmpdir=${tmpdir} --cache=${cachedir}
 
         if [ $? -eq 0 ]
         then
@@ -69,6 +63,11 @@ do
                         mv -f ${vmlinuz} "${destdir}/${label}"
                         mv -f ${initrd} "${destdir}/${label}"
                         echo $md5sum > $md5sum_cache_file
+                        postscript="${srcdir}/${label}.post"
+                        if [ -x "${postscript}" ]
+                        then
+                            ${postscript} "${destdir}/${label}/"
+                        fi
                     fi
                 fi
             else

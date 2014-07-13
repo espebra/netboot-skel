@@ -1,0 +1,14 @@
+#!/bin/bash
+dir=$1
+tag="s2wet1odll"
+url="http://filebin.net/uploader"
+
+
+for f in $(ls ${dir})
+do
+    echo "Uploading ${f} to tag ${tag} using ${url}"
+    size=$(ls -l "${dir}/${f}" | awk '{print $5}')
+    md5=$(md5sum "${dir}/${f}" | awk '{print $1}')
+    path="${dir}/${f}"
+    curl -s -L -H "x-filename: ${f}" -H "x-size: ${size}" -H "x-checksum: ${md5}" -H "x-tag: ${tag}" --data-binary "@${dir}/${f}" "${url}"
+done
